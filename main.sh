@@ -56,6 +56,13 @@ elif [ "$1" = "grab" ]; then
 
 	chosen_filename=$(grep "$2" "$curatedlist" | cut -d';' -f1)
 
+	if [ "$chosen" = "" ]; then
+
+		echo "The chosen module($2) either doesn't exist or is not currently in your curated list."
+		exit 1;
+
+	fi
+
 	modurl="https://api.modarchive.org/downloads.php?moduleid="$chosen""
 
 	# printf '%q\n' "$chosen_filename"
