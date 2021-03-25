@@ -100,7 +100,7 @@ elif [ "$1" = "random" ]; then
 
 	modurl="https://api.modarchive.org/downloads.php?moduleid="$module""
 	wget "$modurl" --quiet --show-progress --restrict-file-names=unix -O "/tmp/randmods/"$modname""
-	openmpt123 /tmp/randmods/"$modname"
+	openmpt123 $openmptOpts /tmp/randmods/"$modname"
 
 elif [ "$1" = "re-source" ]; then
 
