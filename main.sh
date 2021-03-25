@@ -77,7 +77,7 @@ elif [ "$1" = "id-grab" ]; then
 elif [ "$1" = "random" ]; then
 
 	module=$(shuf -i 1-"$newestmod" -n1)
-	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"" | head -n15 | tail -n1 | awk -F ' - ' '{print $4}' | cut -d' ' -f1)
+	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"" | head -n141 | tail -n1 | awk -F '">' '{print $2}' | awk -F '</span></h1>' '{print $1}' | sed s/\(// | sed s/\)//)
 
 	if [ "$modname" == "" ]; then
 		echo "Something went wrong, rerun."
