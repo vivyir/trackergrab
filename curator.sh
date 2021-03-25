@@ -1,3 +1,3 @@
 #!/bin/bash
 
-curated=""$HOME"/trackergrab/resource/curated.txt"
+curated="./resource/curated.txt"
