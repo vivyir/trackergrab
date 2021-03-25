@@ -76,6 +76,16 @@ elif [ "$1" = "id-grab" ]; then
 
 elif [ "$1" = "random" ]; then
 
+	if [ "$2" == "clean" ]; then
+
+		rm -r /tmp/randmods
+		echo "Cleaned random modules."
+		exit 0
+
+	fi
+
+	mkdir /tmp/randmods 2>/dev/null
+
 	module=$(shuf -i 1-"$newestmod" -n1)
 	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"" | head -n141 | tail -n1 | awk -F '">' '{print $2}' | awk -F '</span></h1>' '{print $1}' | sed s/\(// | sed s/\)//)
 
@@ -86,11 +96,11 @@ elif [ "$1" = "random" ]; then
 
 	echo "Module filename : "$modname""
 	echo "Module ID : "$module""
-	echo "Saved in : /tmp/"$modname""
+	echo "Saved in : /tmp/randmods/"$modname""
 
 	modurl="https://api.modarchive.org/downloads.php?moduleid="$module""
-	wget "$modurl" --quiet --show-progress --restrict-file-names=unix -O "/tmp/"$modname""
-	openmpt123 /tmp/"$modname"
+	wget "$modurl" --quiet --show-progress --restrict-file-names=unix -O "/tmp/randmods/"$modname""
+	openmpt123 /tmp/randmods/"$modname"
 
 elif [ "$1" = "re-source" ]; then
 
