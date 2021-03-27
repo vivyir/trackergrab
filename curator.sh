@@ -1,3 +1,4 @@
 #!/bin/bash
+trackergrabPath="."
 
-curated="./resource/curated.txt"
+curated=""$trackergrabPath"/resource/curated.txt"
