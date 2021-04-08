@@ -110,17 +110,45 @@ elif [ "$1" = "random" ]; then
 
 	mkdir /tmp/randmods 2>/dev/null
 
-	module=$(shuf -i 1-"$newestmod" -n1)
-	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"" | head -n141 | tail -n1 | awk -F '">' '{print $2}' | awk -F '</span></h1>' '{print $1}' | sed s/\(// | sed s/\)//)
+	if [ "$MODULE" == "" ]; then
+		module=$(shuf -i 1-"$newestmod" -n1)
+	else
+		module="$MODULE"
+	fi
 
-	if [ "$modname" == "" ]; then
+	wpage=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"")
+	modstat=$(echo -n "$wpage" | head -n187 | tail -n1)
+
+	if [ "$modstat" == "" ]; then
 		echo -e ""$_yellow"No module by the ID '$module' found, regenerating..."
+
+		if [ "$TESTS" == "1" ]; then
+			exit 0
+		fi
+
 		exec "$0" "$1" 
 	fi
 
+	modspot=$(echo -n "$wpage" | head -n171 | tail -n1)
+
+	nameline=179
+	spotlit="No"
+	if [ "$modspot" != "" ]; then
+		let "nameline = nameline + 6"
+		spotlit="Yes"
+	fi
+
+	modname=$(echo -n "$wpage" | head -n"$nameline" | tail -n1 | cut -d'#' -f2 | awk -F '">' '{print $1}')
+
+
 	echo -e ""$_green"Module filename "$_reset": "$_lightblue""$modname""
 	echo -e ""$_green"Module ID "$_reset": "$_lightblue""$module""
+	echo -e ""$_green"Spotlit "$_reset": "$_lightblue""$spotlit""
 	echo -e ""$_green"Saved in "$_reset": "$_lightblue"/tmp/randmods/"$modname""$_reset""
+
+	if [ "$TESTS" == "1" ]; then
+		exit 0
+	fi
 
 	echo -ne "$_yellow"
 	modurl="https://api.modarchive.org/downloads.php?moduleid="$module""
