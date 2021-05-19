@@ -117,7 +117,7 @@ elif [ "$1" = "random" ]; then
 	fi
 
 	wpage=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$module"")
-	modstat=$(echo -n "$wpage" | head -n187 | tail -n1)
+	modstat=$(echo -n "$wpage" | head -n184 | tail -n1)
 
 	if [ "$modstat" == "" ]; then
 		echo -e ""$_yellow"No module by the ID '$module' found, regenerating..."
@@ -129,9 +129,9 @@ elif [ "$1" = "random" ]; then
 		exec "$0" "$1" 
 	fi
 
-	modspot=$(echo -n "$wpage" | head -n171 | tail -n1)
+	modspot=$(echo -n "$wpage" | head -n170 | tail -n1)
 
-	nameline=179
+	nameline=178
 	spotlit="No"
 	if [ "$modspot" != "" ]; then
 		let "nameline = nameline + 6"
