@@ -86,8 +86,8 @@ elif [ "$1" = "grab" ]; then
 
 elif [ "$1" = "id-grab" ]; then
 
-	modurl="https://api.modarchive.org/downloads.php?moduleid="$1""
-	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$2"" | head -n141 | tail -n1 | awk -F '">' '{print $2}' | awk -F '</span></h1>' '{print $1}' | sed s/\(// | sed s/\)//)
+	modurl="https://api.modarchive.org/downloads.php?moduleid="$2""
+	modname=$(curl -s "https://modarchive.org/index.php?request=view_by_moduleid&query="$2"" | head -n140 | tail -n1 | awk -F '">' '{print $2}' | awk -F '</span></h1>' '{print $1}' | sed s/\(// | sed s/\)//)
 
 	if [ "$modname" == "" ]; then
 		echo -e ""$_red"No module by the ID '$2' found."
@@ -156,6 +156,26 @@ elif [ "$1" = "random" ]; then
 	echo -ne "$_reset"
 
 	openmpt123 $openmptOpts /tmp/randmods/"$modname"
+
+elif [ "$1" = "near-fname-grab" ]; then
+
+	wpage=$(curl -s "https://modarchive.org/index.php?request=search&query="$2"&submit=Find&search_type=filename")
+
+	statline=151
+	stat=$(echo -n "$wpage" | head -n"$statline" | tail -n1)
+
+	if [ "$stat" == "" ]; then
+		let "modline = statline + 18"
+	elif [ "$stat" == "<h1>Module Search</h1>" ]; then
+		echo -e ""$_red"No module by the name '$2' found, exiting..."
+		exit 1
+	else
+		let "modline = statline + 7"
+	fi
+
+	modid=$(echo -n "$wpage" | head -n"$modline" | tail -n1 | awk -F '&amp;query=' '{print $2}' | awk -F '" title' '{print $1}')
+
+	exec "$0" "id-grab" "$modid"
 
 elif [ "$1" = "re-source" ]; then
 
